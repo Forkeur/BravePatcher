@@ -1,10 +1,12 @@
 name: Brave Analysis
 
+env:
+  python_version: 3.9
+  ghidra_url: https://github.com/NationalSecurityAgency/ghidra/releases/download/Ghidra_11.0.3_build/ghidra_11.0.3_PUBLIC_20240410.zip
 on:
   push:
     branches: [ main, dev ]
-  schedule:
-    - cron: '11 */8 * * *'
+  workflow_dispatch:
 jobs:
   start-analysis-windows-x64:
     runs-on: windows-latest
@@ -18,7 +20,7 @@ jobs:
         uses: actions/setup-python@v2
         timeout-minutes: 5
         with:
-          python-version: 3.x
+          python-version: ${{ env.python_version }}
 
       - uses: actions/setup-java@v2
         with:
@@ -45,7 +47,7 @@ jobs:
 
       - name: Setup ghidra
         run: |
-          Invoke-WebRequest "https://github.com/NationalSecurityAgency/ghidra/releases/download/Ghidra_10.0.4_build/ghidra_10.0.4_PUBLIC_20210928.zip" -OutFile "ghidra.zip"
+          Invoke-WebRequest "${{ env.ghidra_url }}" -OutFile "ghidra.zip"
           Expand-Archive -LiteralPath "ghidra.zip" -DestinationPath .
           Move-Item -Force -Path ghidra_*_PUBLIC -Destination ghidra
         shell: pwsh
@@ -125,7 +127,7 @@ jobs:
         uses: actions/setup-python@v2
         timeout-minutes: 5
         with:
-          python-version: 3.x
+          python-version: ${{ env.python_version }}
 
       - uses: actions/setup-java@v2
         with:
@@ -152,7 +154,7 @@ jobs:
 
       - name: Setup ghidra
         run: |
-          Invoke-WebRequest "https://github.com/NationalSecurityAgency/ghidra/releases/download/Ghidra_10.0.4_build/ghidra_10.0.4_PUBLIC_20210928.zip" -OutFile "ghidra.zip"
+          Invoke-WebRequest "${{ env.ghidra_url }}" -OutFile "ghidra.zip"
           Expand-Archive -LiteralPath "ghidra.zip" -DestinationPath .
           Move-Item -Force -Path ghidra_*_PUBLIC -Destination ghidra
         shell: pwsh
